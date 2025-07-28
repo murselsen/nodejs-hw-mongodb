@@ -1,13 +1,18 @@
 import express from 'express';
 import { env } from './utils/env.js';
+import cors from 'cors';
+import pino from 'pino-http';
+
+const PORT = env('PORT') || 3000;
+
 export const setupServer = async () => {
   const app = express();
 
-  const PORT = env('PORT') || 3000;
+  app.use(express.json());
+  app.use(cors());
+  app.use(pino());
 
-  await app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  app.listen(PORT, () => {
+    console.log(`✅ | Server is running on port ${PORT}`);
   });
-
-  console.log('Server setup complete');
 };
