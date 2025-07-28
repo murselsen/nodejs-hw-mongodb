@@ -1,11 +1,13 @@
 import express from 'express';
-
-export const setupServer = () => {
+import { env } from './utils/env.js';
+export const setupServer = async () => {
   const app = express();
 
-  const PORT = process.env.PORT || 3000;
+  const PORT = env('PORT') || 3000;
 
-  app.listen(PORT);
+  await app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 
   console.log('Server setup complete');
 };
