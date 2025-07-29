@@ -1,7 +1,6 @@
 import express from 'express';
 import { env } from './utils/env.js';
 import cors from 'cors';
-import pino from 'pino-http';
 
 import { getAllContacts, getContactById } from './services/contacts.js';
 
@@ -12,7 +11,15 @@ export const setupServer = async () => {
 
   app.use(express.json());
   app.use(cors());
-  app.use(pino());
+  // app.use(pino({
+  //   transport: {
+  //     target: 'pino-pretty',
+  //     options: {
+  //       colorize: true,
+  //       translateTime: 'SYS:standard',
+  //     },
+  //   },
+  // }));
 
   app.get('/', (req, res) => {
     res.json({ message: 'Welcome to the Contacts API' });
@@ -32,12 +39,13 @@ export const setupServer = async () => {
     }
   });
 
-  app.get('/contacts/:contactId', async (req, res) => {
+  app.get('/contacts/:contactId', async (req, res, next) => {
     const { contactId } = req.params;
     try {
       const contact = await getContactById(contactId);
+      console.log('Contact found:', contact);
       if (!contact) {
-        return res.status(404).json({
+        res.status(404).json({
           status: 404,
           message: 'Contact not found',
         });
@@ -49,11 +57,11 @@ export const setupServer = async () => {
       });
     } catch (error) {
       console.error('Error fetching contact by ID:', error);
-      res.status(500).json({ status: 500, message: 'Internal Server Error' });
+    
     }
   });
 
-  app.use((req, res) => {
+  app.use('*', (req, res) => {
     res.status(404).json({ message: 'Not found' });
   });
 

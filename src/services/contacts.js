@@ -1,25 +1,23 @@
+import { isValidObjectId } from 'mongoose';
 import ContactCollection from '../db/models/contacts.js';
 
 export const getAllContacts = async () => {
-  try {
-    const contacts = await ContactCollection.find();
-    return contacts;
-  } catch (error) {
-    console.error('Error fetching contacts:', error);
-    throw error;
+  const contacts = await ContactCollection.find();
+  console.log('Contacts found:', contacts);
+  if (!contacts) {
+    return null;
   }
+  return contacts;
 };
 export const getContactById = async (id) => {
+  if (!isValidObjectId(id)) return null;
+
   try {
     const contact = await ContactCollection.findById(id);
-    if (!contact) {
-      throw new Error('Contact not found');
-    }
-    return contact;
+    console.log('Contact found:', contact);
+    return contact; // null ise null döner, varsa contact döner
   } catch (error) {
-    console.error('Error fetching contact by ID:', error);
-    throw error;
+    console.error('Error in getContactById:', error);
+    return null; // Hata durumunda null döndür
   }
 };
-
-
