@@ -50,3 +50,20 @@ export const deleteContact = async (id) => {
   console.log('Contact deleted successfully:', result);
   return true; // Başarılı ise silinen true döner
 };
+
+export const updateContact = async (id, payload) => {
+  if (!isValidObjectId(id)) return null;
+
+  const result = await ContactCollection.findByIdAndUpdate(
+    {
+      _id: id,
+    },
+    payload,
+    { runValidators: false }
+  );
+
+  if (!result) {
+    return null;
+  }
+  return result;
+};
