@@ -7,6 +7,7 @@ import {
   deleteContactController,
   getAllContactsController,
   getContactByIdController,
+  updateContactController,
 } from './controllers/contacts.js';
 
 import { errorHandler } from './middleware/errorHandler.js';
@@ -42,6 +43,10 @@ export const setupServer = async () => {
 
   app.delete('/contacts/:contactId', deleteContactController);
 
+  app.patch('/contacts/:contactId', updateContactController);
+
+
+  
   // Error Handling Middleware
   app.use('*', notFoundHandler);
 
