@@ -11,7 +11,3 @@ const startServer = async () => {
 };
 
 startServer();
-
-import httpErrors from 'http-errors';
-
-httpErrors(404, 'Not Found'); // Example usage of http-errors package
