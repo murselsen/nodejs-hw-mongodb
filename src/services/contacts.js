@@ -11,7 +11,6 @@ export const getAllContacts = async () => {
 };
 export const getContactById = async (id) => {
   if (!isValidObjectId(id)) return null;
-
   try {
     const contact = await ContactCollection.findById(id);
     console.log('Contact found:', contact);
@@ -21,3 +20,17 @@ export const getContactById = async (id) => {
     return null; // Hata durumunda null döndür
   }
 };
+
+// export const createContact = async (payload) => {
+//   try {
+//     const result = await ContactCollection.create(payload);
+//     if (!result) {
+//       console.error('Contact creation failed:', result);
+//       return null; // Oluşturma başarısızsa null döner
+//     }
+//     return result; // Başarılı ise oluşturulan contact döner
+//   } catch (error) {
+//     console.error('Error in createContact:', error);
+//     return null; // Hata durumunda null döndür
+//   }
+// };
