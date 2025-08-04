@@ -3,6 +3,8 @@ import { env } from './utils/env.js';
 import cors from 'cors';
 
 import {
+  createContactController,
+  deleteContactController,
   getAllContactsController,
   getContactByIdController,
 } from './controllers/contacts.js';
@@ -36,6 +38,11 @@ export const setupServer = async () => {
 
   app.get('/contacts/:contactId', getContactByIdController);
 
+  app.post('/contacts', createContactController);
+
+  app.delete('/contacts/:contactId', deleteContactController);
+
+  // Error Handling Middleware
   app.use('*', notFoundHandler);
 
   app.use(errorHandler);

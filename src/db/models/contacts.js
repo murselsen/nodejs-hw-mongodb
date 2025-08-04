@@ -30,14 +30,14 @@ const contactSchema = new Schema(
   }
 );
 
-/* contactSchema.pre('save', (next) => {
+contactSchema.pre('save', (next) => {
   console.log('A new contact is being created:', this);
   next();
 });
 
 contactSchema.post('save', (doc) => {
   console.log('Contact saved:', doc);
-}); */
+});
 
 const ContactCollection = model('contacts', contactSchema);
 

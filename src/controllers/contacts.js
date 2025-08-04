@@ -34,11 +34,13 @@ export const getContactByIdController = async (req, res, next) => {
     });
   } catch (error) {
     console.error('Error fetching contact by ID:', error);
+    next(error);
   }
 };
 
 export const createContactController = async (req, res, next) => {
   const payload = req.body;
+  console.log('Payload received for contact creation:', payload);
   try {
     const result = await createContact(payload);
     if (!result) {
@@ -51,8 +53,19 @@ export const createContactController = async (req, res, next) => {
     });
   } catch (error) {
     console.error('Error creating contact:', error);
-    next(createHttpError(500, 'Internal Server Error'));
+    next(error);
   }
 };
 
-
+export const deleteContactController = async (req, res, next) => {
+  const { contactId } = req.params;
+  try {
+    return res.status(204).json({
+      status: 204,
+      message: `Successfully deleted contact with id ${contactId}!`,
+    });
+  } catch (error) {
+    console.error('Error deleting contact:', error);
+    next(error);
+  }
+};

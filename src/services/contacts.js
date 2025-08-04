@@ -36,3 +36,17 @@ export const createContact = async (payload) => {
     return null; // Hata durumunda null döndür
   }
 };
+
+export const deleteContact = async (id) => {
+  if (!isValidObjectId(id)) return null;
+
+  const result = await ContactCollection.findByIdAndDelete(id, {
+    sort: true,
+  });
+  if (!result) {
+    console.error(`Contact with id ${id} not found for deletion`);
+    return null; // Eğer contact bulunamazsa null döner
+  }
+  console.log('Contact deleted successfully:', result);
+  return true; // Başarılı ise silinen true döner
+};
