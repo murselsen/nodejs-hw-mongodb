@@ -9,8 +9,8 @@ const initMongoConnection = async () => {
   const mongoUri = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_URL}/${MONGO_DB}?retryWrites=true&w=majority`;
 
   const options = {
-    serverSelectionTimeoutMS: 5000, 
-    socketTimeoutMS: 45000, 
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
   };
   try {
     await mongoose.connect(mongoUri, options);
