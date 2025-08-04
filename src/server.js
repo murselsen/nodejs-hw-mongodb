@@ -7,6 +7,9 @@ import {
   getContactByIdController,
 } from './controllers/contacts.js';
 
+import { errorHandler } from './middleware/errorHandler.js';
+import { notFoundHandler } from './middleware/notFoundHandler.js';
+
 const PORT = env('PORT') || 3000;
 
 export const setupServer = async () => {
@@ -33,9 +36,9 @@ export const setupServer = async () => {
 
   app.get('/contacts/:contactId', getContactByIdController);
 
-  app.use((req, res) => {
-    res.status(404).json({ message: 'Not found' });
-  });
+  app.use('*', notFoundHandler);
+
+  app.use(errorHandler);
 
   app.listen(PORT, () => {
     console.log(`✅ | Server is running on port ${PORT}`);
