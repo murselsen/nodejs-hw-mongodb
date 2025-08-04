@@ -2,7 +2,6 @@ import express from 'express';
 import { env } from './utils/env.js';
 import cors from 'cors';
 
-import { getAllContacts, getContactById } from './services/contacts.js';
 import {
   getAllContactsController,
   getContactByIdController,
