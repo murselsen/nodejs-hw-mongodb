@@ -2,6 +2,7 @@ import {
   getAllContacts,
   getContactById,
   createContact,
+  updateContact,
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
 
@@ -66,6 +67,25 @@ export const deleteContactController = async (req, res, next) => {
     });
   } catch (error) {
     console.error('Error deleting contact:', error);
+    next(error);
+  }
+};
+
+export const updateContactController = async (req, res, next) => {
+  const { contactId } = req.params;
+
+  try {
+    const patchContact = await updateContact(contactId, req.body);
+    if (!patchContact) {
+      next(createHttpError(404, 'Person could not be updated'));
+    }
+    res.status(200).json({
+      status: 200,
+      message: `Successfully updated contact with id ${contactId}!`,
+      data: patchContact,
+    });
+  } catch (error) {
+    console.error('Error updating contact:', error);
     next(error);
   }
 };
