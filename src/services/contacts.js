@@ -21,16 +21,16 @@ export const getContactById = async (id) => {
   }
 };
 
-// export const createContact = async (payload) => {
-//   try {
-//     const result = await ContactCollection.create(payload);
-//     if (!result) {
-//       console.error('Contact creation failed:', result);
-//       return null; // Oluşturma başarısızsa null döner
-//     }
-//     return result; // Başarılı ise oluşturulan contact döner
-//   } catch (error) {
-//     console.error('Error in createContact:', error);
-//     return null; // Hata durumunda null döndür
-//   }
-// };
+export const createContact = async (payload) => {
+  try {
+    const result = await ContactCollection.create(payload);
+    if (!result) {
+      console.error('Contact creation failed:', result);
+      return null; // Oluşturma başarısızsa null döner
+    }
+    return result; // Başarılı ise oluşturulan contact döner
+  } catch (error) {
+    console.error('Error in createContact:', error);
+    return null; // Hata durumunda null döndür
+  }
+};

@@ -39,7 +39,7 @@ export const setupServer = async () => {
     }
   });
 
-  app.get('/contacts/:contactId', async (req, res, next) => {
+  app.get('/contacts/:contactId', async (req, res) => {
     const { contactId } = req.params;
     try {
       const contact = await getContactById(contactId);
@@ -57,11 +57,10 @@ export const setupServer = async () => {
       });
     } catch (error) {
       console.error('Error fetching contact by ID:', error);
-    
     }
   });
 
-  app.use('*', (req, res) => {
+  app.use((req, res) => {
     res.status(404).json({ message: 'Not found' });
   });
 
