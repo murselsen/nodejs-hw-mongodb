@@ -21,7 +21,7 @@ export const getAllContactsController = async (req, res, next) => {
 
     const filter = parseFilterParams(req.query);
     console.log('Filter parameters:', filter);
-    
+
     const contacts = await getAllContacts(
       page,
       perPage,
@@ -31,7 +31,9 @@ export const getAllContactsController = async (req, res, next) => {
     );
     res.status(200).json({
       status: 200,
-      message: 'Successfully found contacts!',
+      message: contacts.data.length
+        ? 'Successfully found contacts!'
+        : 'No contacts found!',
       data: contacts,
     });
   } catch (error) {
