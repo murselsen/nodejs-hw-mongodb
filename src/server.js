@@ -13,6 +13,13 @@ import {
 import { errorHandler } from './middleware/errorHandler.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 
+import {
+  createContactSchema,
+  patchContactSchema,
+} from './validation/contact.js';
+import { validateBody } from './middleware/validateBody.js';
+import { isValidId } from './middleware/isValidId.js';
+
 const PORT = env('PORT') || 3000;
 
 export const setupServer = async () => {
@@ -21,32 +28,29 @@ export const setupServer = async () => {
   app.use(express.json());
   app.use(cors());
 
-  // app.use(pino({
-  //   transport: {
-  //     target: 'pino-pretty',
-  //     options: {
-  //       colorize: true,
-  //       translateTime: 'SYS:standard',
-  //     },
-  //   },
-  // }));
-
   app.get('/', (req, res) => {
     res.json({ message: 'Welcome to the Contacts API' });
   });
 
   app.get('/contacts', getAllContactsController);
 
-  app.get('/contacts/:contactId', getContactByIdController);
+  app.get('/contacts/:contactId', isValidId, getContactByIdController);
 
-  app.post('/contacts', createContactController);
+  app.post(
+    '/contacts',
+    validateBody(createContactSchema),
+    createContactController
+  );
 
-  app.delete('/contacts/:contactId', deleteContactController);
+  app.delete('/contacts/:contactId', isValidId, deleteContactController);
 
-  app.patch('/contacts/:contactId', updateContactController);
+  app.patch(
+    '/contacts/:contactId',
+    isValidId,
+    validateBody(patchContactSchema),
+    updateContactController
+  );
 
-
-  
   // Error Handling Middleware
   app.use('*', notFoundHandler);
 

@@ -1,13 +1,48 @@
 import { isValidObjectId } from 'mongoose';
 import ContactCollection from '../db/models/contacts.js';
 
-export const getAllContacts = async () => {
-  const contacts = await ContactCollection.find();
-  console.log('Contacts found:', contacts);
-  if (!contacts) {
-    return null;
+import { SortOrder } from '../constants/index.js';
+import { calculatePaginationData } from '../utils/calculatePaginationData.js';
+export const getAllContacts = async (
+  page = 1,
+  perPage = 10,
+  sortBy = '_id',
+  sortOrder = SortOrder.ASC,
+
+  filter = {}
+) => {
+  const limit = perPage;
+  const skip = (page - 1) * perPage;
+
+  const contactsQuery = ContactCollection.find();
+
+  if (filter.isFavourite !== undefined) {
+    contactsQuery.where('isFavourite').equals(filter.isFavourite);
   }
-  return contacts;
+  if (filter.type !== undefined) {
+    contactsQuery.where('contactType').equals(filter.type);
+  }
+
+  const [count, data] = await Promise.all([
+    ContactCollection.find().merge(contactsQuery).countDocuments(),
+    ContactCollection.find()
+      .merge(contactsQuery)
+      .skip(skip)
+      .limit(limit)
+      .sort({
+        [sortBy]: sortOrder,
+      })
+
+      .exec(),
+  ]);
+
+  const paginationData = calculatePaginationData(count, page, perPage);
+
+  const result = {
+    data: data,
+    ...paginationData,
+  };
+  return result;
 };
 
 export const getContactById = async (id) => {
