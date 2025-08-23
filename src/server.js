@@ -2,23 +2,10 @@ import express from 'express';
 import { env } from './utils/env.js';
 import cors from 'cors';
 
-import {
-  createContactController,
-  deleteContactController,
-  getAllContactsController,
-  getContactByIdController,
-  updateContactController,
-} from './controllers/contacts.js';
-
 import { errorHandler } from './middleware/errorHandler.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 
-import {
-  createContactSchema,
-  patchContactSchema,
-} from './validation/contact.js';
-import { validateBody } from './middleware/validateBody.js';
-import { isValidId } from './middleware/isValidId.js';
+import appRouters from './routers/index.js';
 
 const PORT = env('PORT') || 3000;
 
@@ -32,24 +19,7 @@ export const setupServer = async () => {
     res.json({ message: 'Welcome to the Contacts API' });
   });
 
-  app.get('/contacts', getAllContactsController);
-
-  app.get('/contacts/:contactId', isValidId, getContactByIdController);
-
-  app.post(
-    '/contacts',
-    validateBody(createContactSchema),
-    createContactController
-  );
-
-  app.delete('/contacts/:contactId', isValidId, deleteContactController);
-
-  app.patch(
-    '/contacts/:contactId',
-    isValidId,
-    validateBody(patchContactSchema),
-    updateContactController
-  );
+  app.use(appRouters);
 
   // Error Handling Middleware
   app.use('*', notFoundHandler);
