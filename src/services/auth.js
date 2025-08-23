@@ -24,7 +24,6 @@ export const loginUser = async (payload) => {
   const user = await UsersCollection.findOne({
     email: payload.email,
   });
-
   if (!user) throw createHttpError(401, 'User not found');
 
   const isPasswordValid = await bcrypt.compare(payload.password, user.password);
@@ -54,4 +53,14 @@ const createSessionTokens = () => {
     accessTokenValidUntil,
     refreshTokenValidUntil,
   };
+};
+
+// Refresh user sessions
+export const refreshUserSession = async ({ sessionId, refreshToken }) => {
+  const session = await SessionCollection.findOne({
+    _id: sessionId,
+    refreshToken,
+  });
+
+  if (!session) throw createHttpError(401, 'Session not found');
 };

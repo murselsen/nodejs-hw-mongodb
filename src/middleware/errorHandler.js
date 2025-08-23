@@ -3,7 +3,7 @@ import { HttpError } from 'http-errors';
 export const errorHandler = (err, req, res, next) => {
   // createHttpError'dan bir hata alıp almadığımızı kontrol ediyoruz
   if (err instanceof HttpError) {
-    console.error('HTTP Error:', Object.keys(err));
+    console.error('HTTP Error:', err.message);
     res.status(err.status).json({
       status: err.status,
       message: err.name,

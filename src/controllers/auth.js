@@ -17,7 +17,7 @@ export const registerUserController = async (req, res, next) => {
 };
 
 const createSessionTokenCookie = (res, { sessionId, refreshToken }) => {
-    const day30 = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+  const day30 = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
   res.cookie('sessionId', sessionId, {
     httpOnly: true,
     expires: new Date(Date.now() + day30), // 30 days
@@ -31,7 +31,7 @@ const createSessionTokenCookie = (res, { sessionId, refreshToken }) => {
 export const loginUserController = async (req, res, next) => {
   try {
     const session = await loginUser(req.body);
-    if (!session) next(createHttpError(400, 'Login failed'));
+    if (!session) next(createHttpError(401, 'Login failed'));
     createSessionTokenCookie(res, {
       sessionId: session._id,
       refreshToken: session.refreshToken,
@@ -41,10 +41,12 @@ export const loginUserController = async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      message: 'Login successful',
+      message: 'Successfully logged in an user!',
       data: session.accessToken,
     });
   } catch (error) {
-    next(error);
+    next(createHttpError(500, error || 'An error occurred during login'));
   }
 };
+
+export const logoutUserController = (req, res) => {};
