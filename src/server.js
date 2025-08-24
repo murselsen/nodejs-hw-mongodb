@@ -1,7 +1,7 @@
 import express from 'express';
 import { env } from './utils/env.js';
 import cors from 'cors';
-
+import cookieParser from 'cookie-parser';
 import { errorHandler } from './middleware/errorHandler.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 
@@ -14,7 +14,7 @@ export const setupServer = async () => {
 
   app.use(express.json());
   app.use(cors());
-
+  app.use(cookieParser());
   app.get('/', (req, res) => {
     res.json({ message: 'Welcome to the Contacts API' });
   });

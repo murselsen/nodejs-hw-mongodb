@@ -65,6 +65,7 @@ export const createContactController = async (req, res, next) => {
   const payload = req.body;
   console.log('Payload received for contact creation:', payload);
   try {
+    payload.userId = req.user._id; // Auth middleware'den gelen user bilgisi
     const result = await createContact(payload);
     if (!result) {
       return next(createHttpError(400, 'Contact creation failed'));

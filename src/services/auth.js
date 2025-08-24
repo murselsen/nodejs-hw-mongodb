@@ -38,6 +38,10 @@ export const loginUser = async (payload) => {
   });
 };
 
+export const logoutUser = async (sessionId) => {
+  await SessionCollection.deleteOne({ _id: sessionId });
+};
+
 const createSessionTokens = () => {
   const accessToken = crypto.randomBytes(30).toString('base64');
   const refreshToken = crypto.randomBytes(30).toString('base64');
@@ -63,4 +67,19 @@ export const refreshUserSession = async ({ sessionId, refreshToken }) => {
   });
 
   if (!session) throw createHttpError(401, 'Session not found');
+
+  const isSessionRefreshTokenExpired =
+    new Date() > new Date(session.refreshTokenValidUntil);
+
+  if (isSessionRefreshTokenExpired) {
+    throw createHttpError(401, 'Session refresh token expired');
+  }
+
+  await SessionCollection.deleteOne({ _id: session._id });
+  const newToken = createSessionTokens();
+
+  return await SessionCollection.create({
+    userId: session.userId,
+    ...newToken,
+  });
 };
