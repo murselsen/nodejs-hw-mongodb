@@ -14,19 +14,27 @@ import {
   createContactSchema,
   patchContactSchema,
 } from '../validation/contact.js';
+import { authenticate } from '../middleware/authenticate.js';
 
 const router = express.Router();
 
-router.get('/', getAllContactsController);
 
-router.get('/:contactId', isValidId, getContactByIdController);
+router.get('/', authenticate, getAllContactsController);
 
-router.post('/', validateBody(createContactSchema), createContactController);
+router.get('/:contactId', authenticate, isValidId, getContactByIdController);
 
-router.delete('/:contactId', isValidId, deleteContactController);
+router.post(
+  '/',
+  authenticate,
+  validateBody(createContactSchema),
+  createContactController
+);
+
+router.delete('/:contactId', authenticate, isValidId, deleteContactController);
 
 router.patch(
   '/:contactId',
+  authenticate,
   isValidId,
   validateBody(patchContactSchema),
   updateContactController
