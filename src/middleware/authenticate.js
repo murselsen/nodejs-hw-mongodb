@@ -5,7 +5,7 @@ import SessionCollection from '../db/models/session.js';
 
 export const authenticate = async (req, res, next) => {
   const authHeader = req.headers.authorization;
-  if (!authHeader) next(createHttpError(401, 'Authorization header missing'));
+  if (!authHeader) return next(createHttpError(401, 'Authorization header missing'));
 
   console.log(authHeader);
 
