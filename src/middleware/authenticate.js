@@ -11,20 +11,20 @@ export const authenticate = async (req, res, next) => {
 
   const bearer = authHeader.split(' ')[0];
   if (bearer !== 'Bearer')
-    next(createHttpError(401, 'Invalid authorization header format'));
+    return next(createHttpError(401, 'Invalid authorization header format'));
   const token = authHeader.split(' ')[1];
   if (!token)
-    next(createHttpError(401, 'Token missing in authorization header'));
+   return next(createHttpError(401, 'Token missing in authorization header'));
 
   const session = await SessionCollection.findOne({ accessToken: token });
-  if (!session) next(createHttpError(401, 'Session not found'));
+  if (!session) return next(createHttpError(401, 'Session not found'));
 
   const isAccessTokenExpired =
     new Date() > new Date(session.accessTokenValidUntil);
-  if (isAccessTokenExpired) next(createHttpError(401, 'Access token expired'));
+  if (isAccessTokenExpired) return next(createHttpError(401, 'Access token expired'));
 
   const user = await UsersCollection.findOne({ _id: session.userId });
-  if (!user) next(createHttpError(401, 'User not found for this session'));
+  if (!user) return  next(createHttpError(401, 'User not found for this session'));
 
   req.user = user;
 

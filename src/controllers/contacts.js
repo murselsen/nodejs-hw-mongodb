@@ -27,7 +27,8 @@ export const getAllContactsController = async (req, res, next) => {
       perPage,
       sortBy,
       sortOrder,
-      filter
+      filter,
+      req.user._id // Auth middleware'den gelen user bilgisi
     );
     res.status(200).json({
       status: 200,
