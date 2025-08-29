@@ -39,7 +39,7 @@ const contactSchema = new Schema(
   }
 );
 
-contactSchema.pre('save', (next) => {
+contactSchema.pre('save', (next) => { 
   console.log('A new contact is being created:', this);
   next();
 });
