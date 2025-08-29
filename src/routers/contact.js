@@ -15,9 +15,8 @@ import {
   patchContactSchema,
 } from '../validation/contact.js';
 import { authenticate } from '../middleware/authenticate.js';
-
+import { upload } from '../middleware/multer.js';
 const router = express.Router();
-
 
 router.get('/', authenticate, getAllContactsController);
 
@@ -26,6 +25,7 @@ router.get('/:contactId', authenticate, isValidId, getContactByIdController);
 router.post(
   '/',
   authenticate,
+  upload.single('photo'),
   validateBody(createContactSchema),
   createContactController
 );
@@ -36,6 +36,7 @@ router.patch(
   '/:contactId',
   authenticate,
   isValidId,
+  upload.single('photo'),
   validateBody(patchContactSchema),
   updateContactController
 );

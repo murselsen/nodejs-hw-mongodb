@@ -4,6 +4,8 @@ import {
   loginUser,
   logoutUser,
   refreshUserSession,
+  sendResetEmail,
+  resetPassword,
 } from '../services/auth.js';
 
 export const registerUserController = async (req, res, next) => {
@@ -83,6 +85,44 @@ export const refreshUserSessionController = async (req, res, next) => {
   } catch (error) {
     next(
       createHttpError(500, error || 'An error occurred during session refresh')
+    );
+  }
+};
+
+export const sendResetEmailController = async (req, res, next) => {
+  try {
+    await sendResetEmail(req.body.email);
+
+    res.status(200).json({
+      status: 200,
+      message: 'Reset password email has been successfully sent.',
+      data: {},
+    });
+  } catch (error) {
+    next(
+      createHttpError(
+        500,
+        error || 'An error occurred while sending reset email'
+      )
+    );
+  }
+};
+
+export const resetPasswordController = async (req, res, next) => {
+  try {
+    const { token, password } = req.body;
+    await resetPassword(token, password);
+    res.status(200).json({
+      status: 200,
+      message: 'Password has been successfully reset.',
+      data: {},
+    });
+  } catch (error) {
+    next(
+      createHttpError(
+        500,
+        error || 'An error occurred while resetting the password'
+      )
     );
   }
 };

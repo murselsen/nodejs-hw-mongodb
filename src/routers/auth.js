@@ -4,8 +4,11 @@ import {
   loginUserController,
   refreshUserSessionController,
   logoutUserController,
+  sendResetEmailController,
+  resetPasswordController,
 } from '../controllers/auth.js';
 import { validateBody } from '../middleware/validateBody.js';
+
 
 // Validation Schemas
 import { loginUserSchema, registerUserSchema } from '../validation/auth.js';
@@ -22,4 +25,6 @@ router.post('/login', validateBody(loginUserSchema), loginUserController);
 router.post('/logout', logoutUserController);
 router.post('/refresh', refreshUserSessionController);
 
+router.post('/send-reset-email', sendResetEmailController);
+router.post('/reset-pwd', resetPasswordController);
 export default router;
