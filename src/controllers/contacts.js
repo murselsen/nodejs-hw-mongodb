@@ -9,6 +9,7 @@ import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { saveFile } from '../utils/saveFile.js';
 
 export const getAllContactsController = async (req, res, next) => {
   try {
@@ -64,10 +65,17 @@ export const getContactByIdController = async (req, res, next) => {
 
 export const createContactController = async (req, res, next) => {
   const payload = req.body;
+
   console.log('Payload received for contact creation:', payload);
   try {
     payload.userId = req.user._id; // Auth middleware'den gelen user bilgisi
-    const result = await createContact(payload);
+
+    let photo;
+    if (req.file) {
+      photo = await saveFile(req.file);
+    }
+
+    const result = await createContact({ photo, ...payload });
     if (!result) {
       return next(createHttpError(400, 'Contact creation failed'));
     }
@@ -99,7 +107,12 @@ export const updateContactController = async (req, res, next) => {
   const { contactId } = req.params;
 
   try {
-    const patchContact = await updateContact(contactId, req.body);
+    let photo;
+    if (req.file) {
+      photo = await saveFile(req.file);
+    }
+
+    const patchContact = await updateContact(contactId, { photo, ...req.body });
     if (!patchContact) {
       next(createHttpError(404, 'Person could not be updated'));
     }
