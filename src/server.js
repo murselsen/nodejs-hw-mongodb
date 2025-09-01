@@ -27,6 +27,6 @@ export const setupServer = async () => {
   app.use(errorHandler);
 
   app.listen(PORT, () => {
-    console.log(`✅ | Server is running on port ${PORT}`);
+    console.log(`✅ | Express | Server is running on port ${PORT}`);
   });
 };
