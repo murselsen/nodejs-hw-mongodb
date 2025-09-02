@@ -128,7 +128,14 @@ export const sendResetEmail = async (email) => {
     to: user.email,
     subject: 'Reset your password',
     html,
-  });
+  })
+    .then((mail) => {
+      console.log('Sending mail log:', mail);
+    })
+    .catch((error) => {
+      console.error('Error sending mail:', error);
+      throw createHttpError(500, 'Failed to send reset email');
+    });
 };
 
 export const resetPassword = async (token, password) => {
